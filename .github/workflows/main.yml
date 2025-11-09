@@ -1,0 +1,38 @@
+name: Multi-Platform Matrix Build (a24aa55)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Matrix Build Job
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.9', '3.10', '3.11']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: matrix-a24aa55
+        run: echo "Building on ${{ matrix.os }} using Python ${{ matrix.python-version }}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Generate build artifact
+        run: |
+          echo "Build output for OS=${{ matrix.os }} Python=${{ matrix.python-version }}" > build_output.txt
+          echo "Timestamp: $(date)" >> build_output.txt
+          echo "Unique ID: a24aa55-${{ matrix.os }}-${{ matrix.python-version }}" >> build_output.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-a24aa55-${{ matrix.os }}-${{ matrix.python-version }}
+          path: build_output.txt
